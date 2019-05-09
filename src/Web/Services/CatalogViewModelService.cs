@@ -79,6 +79,9 @@ namespace Microsoft.eShopWeb.Web.Services
             vm.PaginationInfo.Next = (vm.PaginationInfo.ActualPage == vm.PaginationInfo.TotalPages - 1) ? "is-disabled" : "";
             vm.PaginationInfo.Previous = (vm.PaginationInfo.ActualPage == 0) ? "is-disabled" : "";
 
+            if (brandId == 1)
+                throw new System.Exception("No such item found");
+
             return vm;
         }
 

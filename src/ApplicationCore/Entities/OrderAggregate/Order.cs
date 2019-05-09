@@ -31,7 +31,8 @@ namespace Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate
         // Using a private collection field, better for DDD Aggregate's encapsulation
         // so OrderItems cannot be added from "outside the AggregateRoot" directly to the collection,
         // but only through the method Order.AddOrderItem() which includes behavior.
-        private readonly List<OrderItem> _orderItems = new List<OrderItem>();
+        //private readonly List<OrderItem> _orderItems = new List<OrderItem>();
+        private List<OrderItem> _orderItems = new List<OrderItem>();
 
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
         // Using List<>.AsReadOnly() 

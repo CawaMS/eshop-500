@@ -12,7 +12,8 @@ namespace Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate
 
         public void AddItem(int catalogItemId, decimal unitPrice, int quantity = 1)
         {
-            if (!Items.Any(i => i.CatalogItemId == catalogItemId))
+     
+            if (Items.Any(i => i.CatalogItemId == catalogItemId))
             {
                 _items.Add(new BasketItem()
                 {

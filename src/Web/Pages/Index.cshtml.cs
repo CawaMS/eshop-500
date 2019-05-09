@@ -18,7 +18,9 @@ namespace Microsoft.eShopWeb.Web.Pages
 
         public async Task OnGet(CatalogIndexViewModel catalogModel, int? pageId)
         {
+            
             CatalogModel = await _catalogViewModelService.GetCatalogItems(pageId ?? 0, Constants.ITEMS_PER_PAGE, catalogModel.BrandFilterApplied, catalogModel.TypesFilterApplied);
+
         }
 
 
