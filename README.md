@@ -1,10 +1,10 @@
 # eShopOnWeb
 
-Sample ASP.NET Core reference application, powered by Microsoft, demonstrating a single-process (monolithic) application architecture and deployment model. 
+Sample ASP.NET Core reference application, powered by Microsoft, demonstrating a single-process (monolithic) application architecture and deployment model.
 
 This reference application is meant to support the free .PDF download ebook: [Architecting Modern Web Applications with ASP.NET Core and Azure](https://aka.ms/webappebook), updated to **ASP.NET Core 2.2**. [Also available in ePub/mobi formats](https://dotnet.microsoft.com/learn/web/aspnet-architecture).
 
-You can also read the book in online pages at the .NET docs here: 
+You can also read the book in online pages at the .NET docs here:
 https://docs.microsoft.com/en-us/dotnet/standard/modern-web-apps-azure-architecture/
 
 [![image](https://user-images.githubusercontent.com/782127/52731698-5e910500-2f8c-11e9-80fa-5be7dee4888b.png)](https://dotnet.microsoft.com/learn/web/aspnet-architecture)
@@ -92,3 +92,31 @@ You can run the Web sample by running these commands from the root folder (where
 You should be able to make requests to localhost:5106 once these commands complete.
 
 You can also run the Web application by using the instructions located in its `Dockerfile` file in the root of the project. Again, run these commands from the root of the solution (where the .sln file is located).
+
+## Snapshot Debugger
+In this version of the eShop app, there are two bugs in the code written on purpose to demonstrate the [Application Insights Snapshot Debugger](https://docs.microsoft.com/en-us/azure/azure-monitor/app/snapshot-debugger).
+
+### 1. Cannot add item to shopping cart
+In ApplicationCore/Entities/BasketAggregate/Basket.cs, line 16, the if condition is inverted - it's supposed to return true if any is not found in existing items list but it's doing the reverse. This will generate error when user tries to add an item that's not in the shopping basket yet.
+
+```
+public void AddItem(int catalogItemId, decimal unitPrice, int quantity = 1)
+        {
+
+            if (Items.Any(i => i.CatalogItemId == catalogItemId))
+            {
+                _items.Add(new BasketItem()
+                {
+                    CatalogItemId = catalogItemId,
+                    Quantity = quantity,
+                    UnitPrice = unitPrice
+                });
+                return;
+            }
+            var existingItem = Items.FirstOrDefault(i => i.CatalogItemId == catalogItemId);
+            existingItem.Quantity += quantity;
+        }
+```
+
+### 2. when filter by Azure items, it throws exception as such items are not found
+This is a forced exception throw to demonstrate how item not found is handled poorly in the code. In Web\Services\CatalogViewModelService.cs, line 82, there is a hardcoded error. Using Application Map and E2E traces in App Insights will help triage and root cause the error.
